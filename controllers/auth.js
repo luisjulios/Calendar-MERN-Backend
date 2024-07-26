@@ -24,14 +24,14 @@ const createUser = async (req, res = response) => {
 
 		const token = await generateJWT(user.id, user.name);
 
-		res.status(201).json({
+		return res.status(201).json({
 			ok: true,
 			uid: user.id,
 			name: user.name,
 			token,
 		});
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			ok: false,
 			msg: 'Por favor, comunicarse con el administrador',
 		});
@@ -61,14 +61,14 @@ const loginUser = async (req, res = response) => {
 		//Generar JWT
 		const token = await generateJWT(user.id, user.name);
 
-		res.status(200).json({
+		return res.status(200).json({
 			ok: true,
 			uid: user.id,
 			name: user.name,
 			token,
 		});
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			ok: false,
 			msg: 'Por favor, comunicarse con el administrador',
 		});
@@ -77,10 +77,11 @@ const loginUser = async (req, res = response) => {
 
 const renewToken = async (req, res = response) => {
 	const { uid, name } = req;
-	// const token =
 	const token = await generateJWT(uid, name);
 	return res.json({
 		ok: true,
+		uid,
+		name,
 		token,
 	});
 };
