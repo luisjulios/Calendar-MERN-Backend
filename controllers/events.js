@@ -2,7 +2,7 @@ const { response } = require('express');
 const Event = require('../models/Event-model');
 
 const getEvents = async (req, res = response) => {
-	const events = await Event.find().populate('user', 'name');
+	let events = await Event.find({ user: req.uid }).populate('user', 'name');
 
 	return res.status(200).json({
 		ok: true,
@@ -17,7 +17,7 @@ const createEvent = async (req, res = response) => {
 		event.user = req.uid;
 		const saveEvent = await event.save();
 
-		res.status(200).json({
+		return res.status(200).json({
 			ok: true,
 			event: saveEvent,
 		});
@@ -58,7 +58,7 @@ const updateEvent = async (req, res = response) => {
 			new: true,
 		});
 
-		res.status(200).json({
+		return res.status(200).json({
 			ok: true,
 			updatedEvent,
 		});
@@ -92,7 +92,7 @@ const deleteEvent = async (req, res = response) => {
 
 		await Event.deleteOne(event);
 
-		res.status(200).json({
+		return res.status(200).json({
 			ok: true,
 			msg: 'Evento eliminado',
 		});
